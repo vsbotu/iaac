@@ -24,3 +24,13 @@ resource "aws_subnet" "public" {
         Name = "${var.name}-public-subnet-${each.key}"
     }
 }
+
+resource "aws_subnet" "private" {
+    for_each = var.private_subnets
+    vpc_id = aws_vpc.iaac_vpc.id
+    cidr_block = each.value
+    availability_zone = each.key
+    tags = {
+        Name = "${var.name}-private-subnet-${each.key}"
+    }    
+}

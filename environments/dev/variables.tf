@@ -17,3 +17,8 @@ variable "public_subnets" {
   description = "public subnets"
   type = map(string)
 }
+
+variable "private_subnets" {
+  description = "Private subnets"
+  type = map(string)
+}
