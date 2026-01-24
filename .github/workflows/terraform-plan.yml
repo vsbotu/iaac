@@ -7,15 +7,18 @@ on:
     paths:
       - "modules/**"
       - "environments/dev/**"
+      - ".github/workflows/terraform-plan.yml"
+
   pull_request:
     branches:
       - main
     paths:
       - "modules/**"
       - "environments/dev/**"
+      - ".github/workflows/terraform-plan.yml"
 
 permissions:
-  id-token: write   # REQUIRED for OIDC
+  id-token: write   # REQUIRED for AWS OIDC
   contents: read
 
 concurrency:
@@ -27,7 +30,7 @@ jobs:
     name: Terraform Plan (Dev)
     runs-on: ubuntu-latest
 
-    environment: dev   # GitHub Environment (vars & secrets)
+    environment: dev   # GitHub Environment (vars)
 
     defaults:
       run:
@@ -37,7 +40,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials (OIDC)
+      - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/Iacc_githhub_actions_role
