@@ -1,42 +1,51 @@
-name: Terraform Plan (Main - OIDC)
+name: Terraform Plan (OIDC - Dev)
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 permissions:
-  id-token: write
+  id-token: write   # REQUIRED for OIDC
   contents: read
 
 jobs:
   terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
+
+    environment: dev   # GitHub Environment
 
     defaults:
       run:
         working-directory: environments/dev
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials using OIDC
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::401399516814:role/github-actions-terraform-role
-          aws-region: ap-south-1
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github-actions-terraform-role
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
 
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -input=false
