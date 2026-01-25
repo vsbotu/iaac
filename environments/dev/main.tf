@@ -9,9 +9,9 @@ module "vpc" {
 }
 
 module "ec2" {
-  source = "../../modules/ec2"
+  source   = "../../modules/ec2"
   key_name = var.key_name
-  instances = {    
+  instances = {
     webserver1 = {
       ami           = var.ami_id
       instance_type = "t3.micro"
