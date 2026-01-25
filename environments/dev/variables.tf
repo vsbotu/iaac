@@ -22,3 +22,13 @@ variable "private_subnets" {
   description = "Private subnets"
   type        = map(string)
 }
+
+variable "ami_id" {
+  description = "ami_id"
+  type        = string
+}
+
+variable "key_name" {
+  type        = string
+  description = "EC2 key pair name"
+}

@@ -9,3 +9,7 @@ private_subnets = {
   ap-south-1a = "10.0.3.0/24"
   ap-south-1b = "10.0.4.0/24"
 }
+
+ami_id = "ami-087d1c9a513324697"
+
+key_name = "iaac"
