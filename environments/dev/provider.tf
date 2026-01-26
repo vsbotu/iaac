@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.0"
+  required_version = ">= 1.5.0"
 
   required_providers {
     aws = {
@@ -7,18 +7,16 @@ terraform {
       version = "~> 5.0"
     }
   }
-}
 
-provider "aws" {
-  region = var.region
-}
-
-terraform {
   backend "s3" {
     bucket       = "iaac-vsbotu-lock"
     key          = "dev/terraform.tfstate"
     region       = "ap-south-1"
     encrypt      = true
-    use_lockfile = true # enable S3-native lockfile
+    use_lockfile = true
   }
+}
+
+provider "aws" {
+  region = var.region
 }
