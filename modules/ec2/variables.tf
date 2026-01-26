@@ -12,3 +12,9 @@ variable "instances" {
 variable "key_name" {
   type = string
 }
+
+variable "iam_instance_profile" {
+  type        = string
+  description = "IAM instance profile for EC2"
+  default     = null # optional
+}

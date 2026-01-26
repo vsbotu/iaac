@@ -9,8 +9,8 @@ module "vpc" {
 }
 
 module "ec2" {
-  source   = "../../modules/ec2"
-  key_name = var.key_name
+  source               = "../../modules/ec2"
+  key_name             = var.key_name
   iam_instance_profile = module.iam_ec2.instance_profile_name
   instances = {
     webserver1 = {

@@ -6,6 +6,7 @@ resource "aws_instance" "instance" {
   key_name      = var.key_name
   # Attach security groups
   vpc_security_group_ids = each.value.security_groups
+  iam_instance_profile   = var.iam_instance_profile
   tags = merge(each.value.tags,
     {
       Name = each.key

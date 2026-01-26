@@ -13,7 +13,7 @@ variable "ingress_rules" {
     from_port   = number
     to_port     = number
     protocol    = string
-    cidr_blocks  = list(string)
+    cidr_blocks = list(string)
     description = optional(string)
   }))
   default = []
@@ -25,14 +25,14 @@ variable "egress_rules" {
     from_port   = number
     to_port     = number
     protocol    = string
-    cidr_blocks  = list(string)
+    cidr_blocks = list(string)
     description = optional(string)
   }))
   default = [
     {
-      from_port  = 0
-      to_port    = 0
-      protocol   = "-1"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
     }
   ]
