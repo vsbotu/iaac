@@ -12,3 +12,13 @@ terraform {
 provider "aws" {
   region = var.region
 }
+
+terraform {
+  backend "s3" {
+    bucket       = "iaac-vsbotu-lock"
+    key          = "dev/terraform.tfstate"
+    region       = "ap-south-1"
+    encrypt      = true
+    use_lockfile = true   # enable S3-native lockfile
+  }
+}
