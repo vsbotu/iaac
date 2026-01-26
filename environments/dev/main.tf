@@ -11,6 +11,7 @@ module "vpc" {
 module "ec2" {
   source   = "../../modules/ec2"
   key_name = var.key_name
+  iam_instance_profile = module.iam_ec2.instance_profile_name
   instances = {
     webserver1 = {
       ami             = var.ami_id
@@ -82,4 +83,23 @@ module "dbserver_sg" {
       description = "HTTP access"
     }
   ]
+}
+
+
+module "iam_ec2" {
+  source    = "../../modules/iam"
+  role_name = "iaac-ec2-instance-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+  policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
+  ]
+  create_instance_profile = true
 }
