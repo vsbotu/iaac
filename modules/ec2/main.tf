@@ -7,6 +7,7 @@ resource "aws_instance" "instance" {
   # Attach security groups
   vpc_security_group_ids = each.value.security_groups
   iam_instance_profile   = var.iam_instance_profile
+  user_data              = file("${path.module}/install-nginx.sh")
   tags = merge(each.value.tags,
     {
       Name = each.key
