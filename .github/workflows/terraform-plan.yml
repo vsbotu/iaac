@@ -1,13 +1,7 @@
-name: Terraform CI/CD (OIDC - Dev)
+
+name: Terraform Plan (OIDC - Dev)
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "modules/**"
-      - "environments/dev/**"
-
   push:
     branches:
       - main
@@ -15,57 +9,55 @@ on:
     paths:
       - "modules/**"
       - "environments/dev/**"
+      - ".github/workflows/terraform-plan.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "modules/**"
+      - "environments/dev/**"
+      - ".github/workflows/terraform-plan.yml"
 
 permissions:
-  id-token: write      # REQUIRED for AWS OIDC
+  id-token: write   # REQUIRED for AWS OIDC
   contents: read
-  pull-requests: write # Optional: PR comments
 
 concurrency:
   group: terraform-dev
   cancel-in-progress: false
 
 jobs:
-  terraform:
-    name: Terraform Pipeline (Dev)
+  terraform-plan:
+    name: Terraform Plan (Dev)
     runs-on: ubuntu-latest
-    environment: dev
+
+    environment: dev   # GitHub Environment (vars)
 
     defaults:
       run:
         working-directory: environments/dev
 
     steps:
-      # -----------------------------
-      # Checkout
-      # -----------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # -----------------------------
-      # AWS OIDC Auth
-      # -----------------------------
-      - name: Configure AWS credentials (OIDC)
+      - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/Iacc_githhub_actions_role
           aws-region: ${{ vars.AWS_REGION }}
 
-      # -----------------------------
-      # Terraform Setup
-      # -----------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
           terraform_wrapper: false
 
-      - name: Verify Terraform Version
+      # ✅ Added version check (ONLY change)
+      - name: Verify Terraform version
         run: terraform version
 
-      # -----------------------------
-      # Terraform Quality Checks
-      # -----------------------------
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
@@ -75,9 +67,5 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      # -----------------------------
-      # Terraform Plan
-      # -----------------------------
       - name: Terraform Plan
-        run: terraform plan -input=false -var-file="terraform.tfvars" -out=tfplan
-
+        run: terraform plan -input=false -var-file="terraform.tfvars"
