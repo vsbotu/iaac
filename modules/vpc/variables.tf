@@ -16,3 +16,8 @@ variable "private_subnets" {
   description = "Private subnet"
   type        = map(string)
 }
+
+variable "cluster_name" {
+  description = "EKS cluster name"
+  type        = string
+}

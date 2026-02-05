@@ -22,6 +22,9 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
   tags = {
     Name = "${var.name}-public-subnet-${each.key}"
+    # EKS Tags
+    "kubernetes.io/role/elb"                      = "1"
+    "kubernetes.io/cluster/${var.cluster_name}"   = "owned"
   }
 }
 
@@ -32,6 +35,9 @@ resource "aws_subnet" "private" {
   availability_zone = each.key
   tags = {
     Name = "${var.name}-private-subnet-${each.key}"
+    # EKS Tags
+    "kubernetes.io/role/internal-elb"             = "1"
+    "kubernetes.io/cluster/${var.cluster_name}"   = "owned"
   }
 }
 
